@@ -1,0 +1,49 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+
+
+data=pd.read_csv("cancer.csv")
+dataset=data.drop('CodeNumber', 1) 
+print(dataset.info())
+
+color_list = ['red' if i==4 else 'green' for i in dataset.loc[:,'CancerType']]
+pd.plotting.scatter_matrix(dataset.loc[:, dataset.columns != 'CancerType'],
+                                       c=color_list,
+                                       figsize= [15,15],
+                                       diagonal='hist',
+                                       alpha=0.5,
+                                       s = 200,
+                                       marker = '*',
+                                       edgecolor= "black")
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split
+x,y = dataset.loc[:,dataset.columns != 'CancerType'], dataset.loc[:,'CancerType']
+x_train,x_test,y_train,y_test = train_test_split(x,y,test_size = 0.3,random_state = 1)
+knn = KNeighborsClassifier(n_neighbors = 5)
+knn.fit(x_train,y_train)
+prediction = knn.predict(x_test)
+print('Prediction: {}'.format(prediction))
+print('With KNN (K=18) accuracy is: ',knn.score(x_test,y_test)) 
+
+neig = np.arange(1, 25)
+train_accuracy = []
+test_accuracy = []
+for i,k in enumerate(neig):
+    knn = KNeighborsClassifier(n_neighbors = k)
+    knn.fit(x_train,y_train)
+    train_accuracy.append(knn.score(x_train, y_train))
+    test_accuracy.append(knn.score(x_test, y_test))
+
+plt.figure(figsize=[13,8])
+plt.plot(neig, test_accuracy, label = 'Testing Accuracy')
+plt.plot(neig, train_accuracy, label = 'Training Accuracy')
+plt.legend()
+plt.title('k value VS Accuracy')
+plt.xlabel('Number of Neighbors')
+plt.ylabel('Accuracy')
+plt.xticks(neig)
+plt.show() 
+print(np.max(test_accuracy))
+print(1+test_accuracy.index(np.max(test_accuracy)))
