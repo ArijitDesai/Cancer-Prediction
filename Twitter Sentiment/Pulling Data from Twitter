@@ -13,9 +13,9 @@ api = tweepy.API(auth,wait_on_rate_limit=True)
 
 # tweeets with a tag football
 results = []
-for tweet in tweepy.Cursor(api.search, q='#football',count=100,
+for tweet in tweepy.Cursor(api.search, q='#football',
                            lang="en",
-                           since="2018-06-03").items():
+                           since="2018-06-03").items(100):
     results.append(tweet)
 
 #creating a dataframe using tweets
