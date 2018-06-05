@@ -1,2 +1,3 @@
-# Cancer Prediction
-Using KNN I have predicted whether the tumor is Benign or Malignant
+# Projects
+1. Cancer Prediction
+2. Twitter Sentiment
